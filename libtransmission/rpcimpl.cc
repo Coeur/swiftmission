@@ -2644,8 +2644,9 @@ void tr_rpc_request_exec_json(
  * We have very loose typing on this to make the URIs as simple as possible:
  * - anything not a 'tag' or 'method' is automatically in 'arguments'
  * - values that are all-digits are numbers
- * - values that are all-digits or commas are number lists
- * - all other values are strings
+ * - values that are all-digits or commas are number lists (single element list can be made like "2,")
+ * - other values with commas are string list (single element list can be made like "string,")
+ * - or else string
  */
 void tr_rpc_parse_list_str(tr_variant* setme, std::string_view str)
 {
@@ -2654,7 +2655,22 @@ void tr_rpc_parse_list_str(tr_variant* setme, std::string_view str)
 
     if (value_count == 0)
     {
-        tr_variantInitStr(setme, str);
+        auto delimiter = ',';
+        if (str.find(delimiter) == str.npos) // single string
+        {
+            tr_variantInitStr(setme, str);
+        }
+        else // string list
+        {
+            tr_variantInitList(setme, 0);
+            auto start{ str.find_first_not_of(delimiter) }; // ignore empty strings
+            while (start != str.npos)
+            {
+                auto end = str.find(delimiter, start);
+                tr_variantListAddStr(setme, str.substr(start, end - start));
+                start = str.find_first_not_of(delimiter, end);
+            }
+        }
     }
     else if (value_count == 1)
     {
