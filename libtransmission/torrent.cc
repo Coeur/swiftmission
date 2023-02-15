@@ -1467,6 +1467,7 @@ tr_stat const* tr_torrentStat(tr_torrent* tor)
     for (int i = 0; i < TR_PEER_FROM__MAX; i++)
     {
         s->peersFrom[i] = swarm_stats.peer_from_count[i];
+        s->knownPeersFrom[i] = swarm_stats.known_peer_from_count[i];
     }
 
     auto const piece_upload_speed_bytes_per_second = tor->bandwidth_.get_piece_speed_bytes_per_second(now, TR_UP);
