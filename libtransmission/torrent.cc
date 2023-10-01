@@ -1900,10 +1900,16 @@ void tr_torrent::recheck_completeness()
         }
 
         this->completeness = new_completeness;
-        this->session->closeTorrentFiles(this);
+
+        if (this->is_done() && was_running)
+        {
+            tr_torrentVerify(this);
+        }
 
         if (this->is_done())
         {
+            this->session->closeTorrentFiles(this);
+
             if (recent_change)
             {
                 tr_announcerTorrentCompleted(this);
