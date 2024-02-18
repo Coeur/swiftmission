@@ -152,7 +152,7 @@ namespace hex_impl
 {
 
 template<typename InIt, typename OutIt>
-constexpr void tr_binary_to_hex(InIt begin, InIt end, OutIt out)
+constexpr void tr_binary_to_hex(InIt begin, InIt end, OutIt&& out)
 {
     auto constexpr Hex = "0123456789abcdef"sv;
 

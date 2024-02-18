@@ -57,7 +57,7 @@ public:
     size_t update_primary_blocklist(std::string_view external_file, bool is_enabled);
 
     template<typename Observer>
-    [[nodiscard]] auto observe_changes(Observer observer)
+    [[nodiscard]] auto observe_changes(Observer&& observer)
     {
         return changed_.observe(std::move(observer));
     }

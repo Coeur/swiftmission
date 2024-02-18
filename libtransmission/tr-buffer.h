@@ -154,7 +154,7 @@ public:
     }
 
     template<typename OneByteType>
-    void push_back(OneByteType ch)
+    void push_back(OneByteType&& ch)
     {
         add(&ch, 1);
     }

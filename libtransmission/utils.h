@@ -105,7 +105,7 @@ int tr_main_win32(int argc, char** argv, int (*real_main)(int, char**));
 [[nodiscard]] char const* tr_strerror(int errnum);
 
 template<typename T>
-[[nodiscard]] std::string tr_strlower(T in)
+[[nodiscard]] std::string tr_strlower(T&& in)
 {
     auto out = std::string{ std::move(in) };
     std::for_each(std::begin(out), std::end(out), [](char& ch) { ch = std::tolower(ch); });
@@ -113,7 +113,7 @@ template<typename T>
 }
 
 template<typename T>
-[[nodiscard]] std::string tr_strupper(T in)
+[[nodiscard]] std::string tr_strupper(T&& in)
 {
     auto out = std::string{ std::move(in) };
     std::for_each(std::begin(out), std::end(out), [](char& ch) { ch = std::toupper(ch); });
@@ -129,7 +129,7 @@ template<typename T>
 [[nodiscard]] bool tr_wildmat(std::string_view text, std::string_view pattern);
 
 template<typename T>
-[[nodiscard]] constexpr bool tr_strv_contains(std::string_view sv, T key) noexcept // c++23
+[[nodiscard]] constexpr bool tr_strv_contains(std::string_view sv, T&& key) noexcept // c++23
 {
     return sv.find(key) != std::string_view::npos;
 }
