@@ -8,11 +8,11 @@
 
 #include <libtransmission/utils.h>
 
-int main(int argc, char** argv)
+int main(int argc, char const* argv[])
 {
     auto const init_mgr = tr_lib_init();
 
     tr_locale_set_global("");
 
-    return NSApplicationMain(argc, (char const**)argv);
+    return NSApplicationMain(argc, argv);
 }
