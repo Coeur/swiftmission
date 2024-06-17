@@ -370,6 +370,48 @@ jobs:
       - name: Make
         run: cmake --build obj --config RelWithDebInfo
 
+  # Only verify build support on older macOS and SDK
+  macos-11:
+    runs-on: macos-11
+    needs: [ what-to-make ]
+    if: ${{ needs.what-to-make.outputs.make-mac == 'true' }}
+    steps:
+      - name: Show Configuration
+        run: |
+          echo '${{ toJSON(needs) }}'
+          echo '${{ toJSON(runner) }}'
+          sw_vers
+      - name: Get Dependencies
+        run: |
+          # we don't include `miniupnpc` because on macOS-11 it attempts to download 2.2.6 which isn't downloadable anymore
+          # https://github.com/homebrew/homebrew-core/blob/master/Formula/m/miniupnpc.rb
+          brew install cmake gettext libdeflate libevent libpsl ninja node pkg-config
+      - name: Get Source
+        uses: actions/checkout@v4
+        with:
+          path: src
+          submodules: recursive
+      - name: Set Xcode to 12.5.1
+        run: |
+          sudo xcode-select --switch /Applications/Xcode_12.5.1.app
+      - name: Configure
+        run: |
+          cmake \
+            -S src \
+            -B obj \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DCMAKE_INSTALL_PREFIX=pfx \
+            -DCMAKE_OSX_ARCHITECTURES='x86_64' \
+            -DENABLE_GTK=OFF \
+            -DENABLE_MAC=${{ (needs.what-to-make.outputs.make-mac == 'true') && 'ON' || 'OFF' }}  \
+            -DENABLE_QT=OFF \
+            -DENABLE_TESTS=OFF \
+            -DENABLE_WERROR=ON \
+            -DRUN_CLANG_TIDY=OFF
+      - name: Make
+        run: cmake --build obj --config RelWithDebInfo
+
   alpine-musl:
     needs: [ what-to-make ]
     runs-on: ubuntu-22.04
