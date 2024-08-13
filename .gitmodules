@@ -21,7 +21,7 @@
 [submodule "third-party/miniupnp"]
 	path = third-party/miniupnp
 	# synced with https://github.com/miniupnp/miniupnp.git
-	url = https://github.com/transmission/miniupnp.git
+	url = https://github.com/miniupnp/miniupnp.git
 [submodule "third-party/googletest"]
 	path = third-party/googletest
 	url = https://github.com/google/googletest.git
