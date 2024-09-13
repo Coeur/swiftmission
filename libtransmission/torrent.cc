@@ -1760,11 +1760,12 @@ namespace
 {
 namespace verify_helpers
 {
-void onVerifyDoneThreadFunc(tr_torrent* const tor)
+void onVerifyDoneThreadFunc(tr_torrent_id_t const tor_id, tr_session* const session)
 {
-    TR_ASSERT(tor->session->amInSessionThread());
+    TR_ASSERT(session->amInSessionThread());
 
-    if (tor->isDeleting)
+    auto* const tor = session->torrents().get(tor_id);
+    if (tor == nullptr || tor->isDeleting)
     {
         return;
     }
@@ -1819,7 +1820,9 @@ void tr_torrentOnVerifyDone(tr_torrent* tor, bool aborted)
         return;
     }
 
-    tor->session->runInSessionThread(onVerifyDoneThreadFunc, tor);
+    // Do not capture the torrent pointer directly, or else we will crash if program
+    // execution reaches this point while the session thread is about to free this torrent.
+    tor->session->runInSessionThread(onVerifyDoneThreadFunc, tor->id(), tor->session);
 }
 
 void tr_torrentVerify(tr_torrent* tor)
