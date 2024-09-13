@@ -9,7 +9,7 @@
 #error only libtransmission should #include this header.
 #endif
 
-#define TR_NAME "Transmission"
+#define TR_NAME "Swiftmission"
 
 #include <array>
 #include <cstddef> // size_t
