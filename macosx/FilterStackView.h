@@ -6,9 +6,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FilterButton : NSButton
-
-@property(nonatomic) NSUInteger count;
+@interface FilterStackView : NSStackView
 
 @end
 
